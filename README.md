@@ -24,20 +24,14 @@
 
 ### 1.3 为什么归一化能提高求解最优解的速度?
 
-在`1.1 什么是归一化`中，我们提到一个对房价进行预测的例子，假设自变量只有房子到地铁站的距离$x_{1}$和房子内房间的个数$x_{2}$，因变量为房价，预测公式和损失函数分别为：
+在`1.1 什么是归一化`中，我们提到一个对房价进行预测的例子，假设自变量只有房子到地铁站的距离<img src="https://latex.codecogs.com/svg.latex?x_{1}">和房子内房间的个数<img src="https://latex.codecogs.com/svg.latex?x_{2}">，因变量为房价，预测公式和损失函数分别为：
 
-$$
-y = \theta_1x_1 + \theta_2x_2 \\
-J = (\theta_{1}x_{1} + \theta_{2}x_{2} - y_{label})^2
-$$
+<img src="https://latex.codecogs.com/svg.latex?y=\theta_{1}x_{1}+\theta_{2}x_{2}\\J=(\theta_{1}x_{1}+\theta_{2}x_{2}-y_{label})^2">
 
 
-在未归一化时，房子到地铁站的距离的取值在0～5000之间，而房间个数的取值范围仅为0～10。假设$x_{1} = 1000，x_{2} = 3$， 那么损失函数的公式可以写为：
+在未归一化时，房子到地铁站的距离的取值在0～5000之间，而房间个数的取值范围仅为0～10。假设<img src="https://latex.codecogs.com/svg.latex?x_{1} = 1000,x_{2} = 3">， 那么损失函数的公式可以写为：
 
-
-$$
-J = (1000\theta_{1}+3\theta_{2} - y_{label})^2
-$$
+<img src="https://latex.codecogs.com/svg.latex?J=(1000\theta_{1}+3\theta_{2}-y_{label})^2">
 
 可将该损失函数寻求最优解过程可视化为下图：
 ![](https://paddlepedia.readthedocs.io/en/latest/_images/normalization.png)
@@ -45,44 +39,35 @@ $$
 <center>图1: 损失函数的等高线，图1（左）为未归一化时，图1（右）为归一化</center><br>
 
 
-在图1中，左图的红色椭圆代表归一化前的损失函数等高线，蓝色线段代表梯度的更新，箭头的方向代表梯度更新的方向。寻求最优解的过程就是梯度更新的过程，其更新方向与登高线垂直。由于$x_1$ 和 $x_2$ 的量级相差过大，损失函数的等高线呈现为一个瘦窄的椭圆。因此如图1（左）所示，瘦窄的椭圆形会使得梯度下降过程呈之字形呈现，导致梯度下降速度缓慢。
+在图1中，左图的红色椭圆代表归一化前的损失函数等高线，蓝色线段代表梯度的更新，箭头的方向代表梯度更新的方向。寻求最优解的过程就是梯度更新的过程，其更新方向与登高线垂直。由于<img src="https://latex.codecogs.com/svg.latex?x_1"> 和 <img src="https://latex.codecogs.com/svg.latex?x_2"> 的量级相差过大，损失函数的等高线呈现为一个瘦窄的椭圆。因此如图1（左）所示，瘦窄的椭圆形会使得梯度下降过程呈之字形呈现，导致梯度下降速度缓慢。
 
-当数据经过归一化后，$x_{1}^{'} = \frac{1000-0}{5000-0}=0.2$，$x_{2}^{'} = \frac{3-0}{10-0}=0.3$，那么损失函数的公式可以写为：
+当数据经过归一化后，<img src="https://latex.codecogs.com/svg.latex?x_{1}^{'}=\frac{1000-0}{5000-0}=0.2">，<img src="https://latex.codecogs.com/svg.latex?x_{2}^{'}=\frac{3-0}{10-0}=0.3">，那么损失函数的公式可以写为：
 
+<img src="https://latex.codecogs.com/svg.latex?J(x)=(0.2\theta_{1}+0.3\theta_{2}-y_{label})^2">
 
-$$
-J(x) = (0.2\theta_{1} + 0.3\theta_{2} - y_{label})^2
-$$
 我们可以看到，经过归一化后的数据属于同一量级，损失函数的等高线呈现为一个矮胖的椭圆形（如图1（右）所示），求解最优解过程变得更加迅速且平缓，因此可以在通过梯度下降进行求解时获得更快的收敛。
 
 ## 1.4 归一化有哪些类型
 
 1. Min-max Normalization (Rescaling)：
 
+<img src="https://latex.codecogs.com/svg.latex?x^{'}=\frac{x-min(x)}{max(x)-min(x)}">
 
-$$
-   x^{'} = \frac{x - min(x)}{max(x) - min(x)}
-$$
-   归一化后的数据范围为 [0, 1]，其中 $min(x)、 max(x)$ 分别求样本数据的最小值和最大值。
+   归一化后的数据范围为 [0, 1]，其中 <img src="https://latex.codecogs.com/svg.latex?min(x)">、 分别求样本数据的最小值和最大值。
 
 2. Mean Normalization：
 
+<img src="https://latex.codecogs.com/svg.latex?x^{'}=\frac{x-mean(x)}{max(x)-min(x)}">
 
-$$
-   x^{'} = \frac{x - mean(x)}{max(x) - min(x)}
-$$
-   归一化后的数据范围为 [-1, 1]，其中 $mean(x)$ 为样本数据的平均值。
+   归一化后的数据范围为 [-1, 1]，其中 <img src="https://latex.codecogs.com/svg.latex?mean(x)"> 为样本数据的平均值。
 
    
 
 3. Z-score Normalization (Standardization)：
 
+<img src="https://latex.codecogs.com/svg.latex?x^{'}=\frac{x-\mu}{\sigma}">
 
-$$
-   x^{'} = \frac{x - \mu}{\sigma}
-$$
-
-   归一化后的数据均值为0、标准差为1，其中 $\mu、\sigma$ 分别为样本数据的均值和标准差。
+   归一化后的数据均值为0、标准差为1，其中 <img src="https://latex.codecogs.com/svg.latex?\mu">、<img src="https://latex.codecogs.com/svg.latex?\sigma"> 分别为样本数据的均值和标准差。
 
    > 深度神经网络或者深度学习领域中提到的归一化基本上指的是Z-score Normalization，也就是统计学中的`标准化`<sup>[2]</sup>。
 
@@ -90,28 +75,19 @@ $$
 
    * 对数归一化：
 
-     
-
-   $$
-   x^{'} = \frac{\lg x}{\lg max(x)}
-   $$
+	<img src="https://latex.codecogs.com/svg.latex?x^{'} = \frac{\lg x}{\lg max(x)}">
 
    * 反正切函数归一化：
 
-   $$
-   x^{'} = \arctan(x) * \frac{2}{\pi}
-   $$
-  
-   归一化后的数据范围为 [-1, 1]
+	<img src="https://latex.codecogs.com/svg.latex?x^{'} = \arctan(x) * \frac{2}{\pi}">
+
+   ​	归一化后的数据范围为 [-1, 1]
 
    * 小数定标标准化（Demical Point Normalization）:
 
+	<img src="https://latex.codecogs.com/svg.latex?x^{'} = \frac{x}{10^j}">
 
-$$
-   x^{'} = \frac{x}{10^j}
-$$
-
-   归一化后的数据范围为 [-1, 1]，$j$ 为使$max(|x^{'}|) < 1$的最小整数。
+   归一化后的数据范围为 [-1, 1]，<img src="https://latex.codecogs.com/svg.latex?j"> 为使<img src="https://latex.codecogs.com/svg.latex?max(|x^{'}|)\textless1"> 的最小整数。
 
    
 
@@ -129,13 +105,11 @@ $$
 
 谈到归一化和标准化可能会存在一些概念的混淆，我们都知道归一化是指normalization，标准化是指standardization，但根据wiki上对feature scaling方法的定义，standardization其实就是z-score normalization，也就是说标准化其实是归一化的一种，而一般情况下，我们会把z-score归一化称为标准化，把min-max归一化简称为归一化。在下文中，我们也是用标准化指代z-score归一化，并使用归一化指代min-max归一化。
 
-其实，归一化和标准化在本质上都是一种线性变换。在`1.4 归一化有哪些类型`中，我们提到了归一化和标准化的公式，对于归一化的公式，在数据给定的情况下，可以令$a = max(x) - min(x)、b = min(x)$，则归一化的公式可变形为：
+其实，归一化和标准化在本质上都是一种线性变换。在`1.4 归一化有哪些类型`中，我们提到了归一化和标准化的公式，对于归一化的公式，在数据给定的情况下，可以令<img src="https://latex.codecogs.com/svg.latex?a = max(x) - min(x)、b = min(x)">，则归一化的公式可变形为：
 
-$$
-x^{'} = \frac{x - b}{a} = \frac{x}{a} - \frac{b}{a} = \frac{x}{a} - c
-$$
+<img src="https://latex.codecogs.com/svg.latex?x^{'} = \frac{x - b}{a} = \frac{x}{a} - \frac{b}{a} = \frac{x}{a} - c">
 
-标准化的公式与变形后的归一化类似，其中的$\mu$和$\sigma$在数据给定的情况下，可以看作常数。因此，标准化的变形与归一化的类似，都可看作对$x$按比例$a$进行缩放，再进行$c$个单位的平移。由此可见，归一化和标准化的本质都是一种线性变换，他们都不会因为对数据的处理而改变数据的原始数值排序。
+标准化的公式与变形后的归一化类似，其中的<img src="https://latex.codecogs.com/svg.latex?\mu">和<img src="https://latex.codecogs.com/svg.latex?\sigma">在数据给定的情况下，可以看作常数。因此，标准化的变形与归一化的类似，都可看作对<img src="https://latex.codecogs.com/svg.latex?x">按比例<img src="https://latex.codecogs.com/svg.latex?a">进行缩放，再进行<img src="https://latex.codecogs.com/svg.latex?c">个单位的平移。由此可见，归一化和标准化的本质都是一种线性变换，他们都不会因为对数据的处理而改变数据的原始数值排序。
 
 那么归一化和标准化又有什么区别呢？
 
@@ -152,7 +126,7 @@ $$
 
 从公式看它们都差不多：无非是减去均值，除以标准差，再施以线性映射。
 
-$$y=\gamma\left(\frac{x-\mu(x)}{\sigma(x)}\right)+\beta$$
+<img src="https://latex.codecogs.com/svg.latex?y=\gamma\left(\frac{x-\mu(x)}{\sigma(x)}\right)+\beta">
 
 这些归一化算法的主要**区别在于操作的 feature map 维度不同**。如何区分并记住它们，一直是件令人头疼的事。参考知乎文章<sup>[3]</sup>，结合Paddle代码，介绍它们的具体操作，并给出一个方便记忆的类比。
 
@@ -163,16 +137,16 @@ $$y=\gamma\left(\frac{x-\mu(x)}{\sigma(x)}\right)+\beta$$
 
 #### 2.2.2 概念及公式
 
-Batch Normalization (BN) 是最早出现的，也通常是效果最好的归一化方式。特征图feature map：$x \in \mathbb{R}^{N \times C \times H \times W}$ ,包含 N 个样本，每个样本通道数为 C，高为 H，宽为 W。对其求均值和方差时，将在 N、H、W上操作，而保留通道 C 的维度。具体来说，就是把第1个样本的第1个通道，加上第2个样本第1个通道 ...... 加上第 N 个样本第1个通道，求平均，得到通道 1 的均值（注意是除以 N×H×W 而不是单纯除以 N，最后得到的是一个代表这个 batch 第1个通道平均值的数字，而不是一个 H×W 的矩阵)。求通道 1 的方差也是同理。对所有通道都施加一遍这个操作，就得到了所有通道的均值和方差。
+Batch Normalization (BN) 是最早出现的，也通常是效果最好的归一化方式。特征图feature map：<img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> ,包含 N 个样本，每个样本通道数为 C，高为 H，宽为 W。对其求均值和方差时，将在 N、H、W上操作，而保留通道 C 的维度。具体来说，就是把第1个样本的第1个通道，加上第2个样本第1个通道 ...... 加上第 N 个样本第1个通道，求平均，得到通道 1 的均值（注意是除以 N×H×W 而不是单纯除以 N，最后得到的是一个代表这个 batch 第1个通道平均值的数字，而不是一个 H×W 的矩阵)。求通道 1 的方差也是同理。对所有通道都施加一遍这个操作，就得到了所有通道的均值和方差。
 
-$$u_{c}(x)=\frac{1}{N H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{c}(x)=\sqrt{\frac{1}{C H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{c}(x)\right)^{2}+\epsilon}$$
+<img src="https://latex.codecogs.com/svg.latex?u_{c}(x)=\frac{1}{N H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
+\sigma_{c}(x)=\sqrt{\frac{1}{C H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{c}(x)\right)^{2}+\epsilon}">
 
 ![image-20220220102250130](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201022870.png)
 
 <center>图2: CNN中BN示意图<br>注：图中蓝色表示一次BN处理的对象，···表示省略。之后的图3-5同理。</center><br>
 
-如果把 $x \in \mathbb{R}^{N \times C \times H \times W}$ 类比为一叠相册。假设当N=3、C=4、H=5、B=6时，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。BN 求均值时，相当于把这些相册按页码一一对应地加起来，再除以这些照片的像素总数：N×H×W。BN 求均值是一个“跨相册求平均”的操作（如图 2 所示），求标准差时也是同理。
+如果把 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> 类比为一叠相册。假设当N=3、C=4、H=5、B=6时，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。BN 求均值时，相当于把这些相册按页码一一对应地加起来，再除以这些照片的像素总数：N×H×W。BN 求均值是一个“跨相册求平均”的操作（如图 2 所示），求标准差时也是同理。
 
 
 #### 2.2.3 原理解析
@@ -232,10 +206,10 @@ Batch Normalization 的一个缺点是**需要较大的 batchsize 才能合理�
 
 #### 2.3.2 概念及公式
 Layer Normalization (LN) 的一个优势是不需要批训练，在单条数据内部就能归一化。
-对于 $x \in \mathbb{R}^{N \times C \times H \times W}$ , LN 对每个样本的 C、H、W 维度上的数据求均值和标准差，保留 N 维度。
+对于 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> , LN 对每个样本的 C、H、W 维度上的数据求均值和标准差，保留 N 维度。
 
-$$u_{n}(x)=\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{n}(x)=\sqrt{\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n}(x)\right)^{2}+\epsilon}$$
+<img src="https://latex.codecogs.com/svg.latex?u_{n}(x)=\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
+\sigma_{n}(x)=\sqrt{\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n}(x)\right)^{2}+\epsilon}">
 
 ![image-20220220102401871](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201024372.png)
 
@@ -275,10 +249,10 @@ $$u_{n}(x)=\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h
 对于图像风格迁移这类的注重每个像素的细粒度任务来说，每个样本的每个像素点的信息都是非常重要的，于是像BN这种每个批量的所有样本都做归一化的算法就不太适用了，因为BN计算归一化统计量时考虑了一个批量中所有图片的内容，从而造成了每个样本独特细节的丢失。同理对于LN这类需要考虑一个样本所有通道的算法来说可能忽略了不同通道的差异，也不太适用于图像风格迁移这类应用。
 
 #### 2.4.2 概念及公式
-对于 $x \in \mathbb{R}^{N \times C \times H \times W}$ ，IN 对每个样本的 H、W 维度的数据求均值和标准差，保留 N 、C 维度，也就是说，它只在 channel 内部求均值和标准差，其公式为：
+对于 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> ，IN 对每个样本的 H、W 维度的数据求均值和标准差，保留 N 、C 维度，也就是说，它只在 channel 内部求均值和标准差，其公式为：
 
-$$u_{n c}(x)=\frac{1}{H W} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{n c}(x)=\sqrt{\frac{1}{H W} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n c}(x)\right)^{2}+\epsilon}$$
+<img src="https://latex.codecogs.com/svg.latex?u_{n c}(x)=\frac{1}{H W} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
+\sigma_{n c}(x)=\sqrt{\frac{1}{H W} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n c}(x)\right)^{2}+\epsilon}">
 
 ![image-20220220102433261](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201024539.png)
 
@@ -318,10 +292,8 @@ IN 求均值时，相当于把一张照片中所有像素值加起来，再除�
 **Group Normalization (GN) 适用于占用显存比较大的任务，例如图像分割**。对这类任务，可能 batchsize 只能是个位数，再大显存就不够用了。而当 batchsize 是个位数时，BN 的表现很差，因为没办法通过几个样本的数据量，来近似总体的均值和标准差。**GN 也是独立于 batch 的，它是 LN 和 IN 的折中**。
 
 #### 2.5.2 概念及公式
-$$u_{n g}(x)=\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{n g}(x)=\sqrt{\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n g}(x)\right)^{2}+\epsilon}$$
-
-![image-20220220102507902](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201025998.png)
+<img src="https://latex.codecogs.com/svg.latex?u_{n g}(x)=\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
+\sigma_{n g}(x)=\sqrt{\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n g}(x)\right)^{2}+\epsilon}">![image-20220220102507902](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201025998.png)
 
 <center>图5: CNN中GN的示意图</center><br></br>
 
@@ -362,7 +334,7 @@ $$u_{n g}(x)=\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w
 ### 3.1 对比
 
 
-如果把 $x \in \mathbb{R}^{N \times C \times H \times W}$类比为一叠相册，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。
+如果把 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}">类比为一叠相册，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。
 
 
 | 方法         | 类比                                                         | 应用场景                                    |
