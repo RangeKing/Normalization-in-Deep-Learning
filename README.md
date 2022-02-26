@@ -295,8 +295,7 @@ class paddle.nn.InstanceNorm2D(num_features, epsilon=1e-05, momentum=0.9, weight
 **Group Normalization (GN) 适用于占用显存比较大的任务，例如图像分割**。对这类任务，可能 batchsize 只能是个位数，再大显存就不够用了。而当 batchsize 是个位数时，BN 的表现很差，因为没办法通过几个样本的数据量，来近似总体的均值和标准差。**GN 也是独立于 batch 的，它是 LN 和 IN 的折中**。
 
 #### 2.5.2 概念及公式
-<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{n g}(x)=\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{n g}(x)=\sqrt{\frac{1}{(C/G) H W} \sum_{c=gC/G}^{(g+1)C/G} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n g}(x)\right)^{2}+\epsilon}"></div>
+<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{ng}(x)=\frac{1}{(C/G)HW}\sum_{c=gC/G}^{(g+1)C/G}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{ng}(x)=\sqrt{\frac{1}{(C/G)HW}\sum_{c=gC/G}^{(g+1)C/G}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{ng}(x)\right)^{2}+\epsilon}"></div>
 
 ![image-20220220102507902](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201025998.png)</div>
 
