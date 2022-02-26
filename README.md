@@ -36,7 +36,7 @@
 可将该损失函数寻求最优解过程可视化为下图：
 ![](https://paddlepedia.readthedocs.io/en/latest/_images/normalization.png)
 
-<center>图1: 损失函数的等高线，图1（左）为未归一化时，图1（右）为归一化</center><br>
+<center>图1: 损失函数的等高线，（左）为未归一化时，（右）为归一化</center><br>
 
 
 在图1中，左图的红色椭圆代表归一化前的损失函数等高线，蓝色线段代表梯度的更新，箭头的方向代表梯度更新的方向。寻求最优解的过程就是梯度更新的过程，其更新方向与登高线垂直。由于<img src="https://latex.codecogs.com/svg.latex?x_1"> 和 <img src="https://latex.codecogs.com/svg.latex?x_2"> 的量级相差过大，损失函数的等高线呈现为一个瘦窄的椭圆。因此如图1（左）所示，瘦窄的椭圆形会使得梯度下降过程呈之字形呈现，导致梯度下降速度缓慢。
@@ -137,9 +137,9 @@
 
 #### 2.2.2 概念及公式
 
-Batch Normalization (BN) 是最早出现的，也通常是效果最好的归一化方式。特征图feature map：<img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> ,包含 N 个样本，每个样本通道数为 C，高为 H，宽为 W。对其求均值和方差时，将在 N、H、W上操作，而保留通道 C 的维度。具体来说，就是把第1个样本的第1个通道，加上第2个样本第1个通道 ...... 加上第 N 个样本第1个通道，求平均，得到通道 1 的均值（注意是除以 N×H×W 而不是单纯除以 N，最后得到的是一个代表这个 batch 第1个通道平均值的数字，而不是一个 H×W 的矩阵)。求通道 1 的方差也是同理。对所有通道都施加一遍这个操作，就得到了所有通道的均值和方差。
+Batch Normalization (BN) 是最早出现的，也通常是效果最好的归一化方式。特征图feature map：<img src="https://latex.codecogs.com/svg.latex?x\in\mathbb{R}^{N\times{C}\times{H}\times{W}}"> ,包含 N 个样本，每个样本通道数为 C，高为 H，宽为 W。对其求均值和方差时，将在 N、H、W上操作，而保留通道 C 的维度。具体来说，就是把第1个样本的第1个通道，加上第2个样本第1个通道 ...... 加上第 N 个样本第1个通道，求平均，得到通道 1 的均值（注意是除以 N×H×W 而不是单纯除以 N，最后得到的是一个代表这个 batch 第1个通道平均值的数字，而不是一个 H×W 的矩阵)。求通道 1 的方差也是同理。对所有通道都施加一遍这个操作，就得到了所有通道的均值和方差。
 
-<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{c}(x)=\frac{1}{NH W}\sum_{n=1}^{N}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{c}(x)=\sqrt{\frac{1}{CHW} \sum_{n=1}^{N}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{c}(x)\right)^{2}+\epsilon}"></div>
+<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{c}(x)=\frac{1}{NHW}\sum_{n=1}^{N}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{c}(x)=\sqrt{\frac{1}{CHW}\sum_{n=1}^{N}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{c}(x)\right)^{2}+\epsilon}"></div>
 
 
 ![image-20220220102250130](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201022870.png)
@@ -161,7 +161,9 @@ BN论文原文给出的解释是BN可以解决神经网络训练过程中的ICS�
 4. BN起作用的真正原因是使得优化问题的解空间更平滑了。这确保梯度更具预测性，从而允许使用更大范围的学习率，实现更快的网络收敛。（目前的主流观点）
 
 #### 2.2.4 BN代码实践
-`class paddle.nn.BatchNorm(num_channels, act=None, is_test=False, momentum=0.9, epsilon=1e-05, param_attr=None, bias_attr=None, dtype='float32', data_layout='NCHW', in_place=False, moving_mean_name=None, moving_variance_name=None, do_model_average_for_mean_and_var=False, use_global_stats=False, trainable_statistics=False)`
+```python
+class paddle.nn.BatchNorm(num_channels, act=None, is_test=False, momentum=0.9, epsilon=1e-05, param_attr=None, bias_attr=None, dtype='float32', data_layout='NCHW', in_place=False, moving_mean_name=None, moving_variance_name=None, do_model_average_for_mean_and_var=False, use_global_stats=False, trainable_statistics=False)
+```
 
 该接口用于构建 `BatchNorm` 类的一个可调用对象，具体参数详情参考[BatchNorm](https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/nn/BatchNorm_cn.html#paddle.nn.BatchNorm)。
 
@@ -206,7 +208,7 @@ Batch Normalization 的一个缺点是**需要较大的 batchsize 才能合理�
 
 #### 2.3.2 概念及公式
 Layer Normalization (LN) 的一个优势是不需要批训练，在单条数据内部就能归一化。
-对于 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> , LN 对每个样本的 C、H、W 维度上的数据求均值和标准差，保留 N 维度。
+对于 <img src="https://latex.codecogs.com/svg.latex?x\in\mathbb{R}^{N\times{C}\times{H}\times{W}}"> , LN 对每个样本的 C、H、W 维度上的数据求均值和标准差，保留 N 维度。
 
 <div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{n}(x)=\frac{1}{CHW}\sum_{c=1}^{C}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{n}(x)=\sqrt{\frac{1}{CHW}\sum_{c=1}^{C}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{n}(x)\right)^{2}+\epsilon}"></div>
 
@@ -391,7 +393,8 @@ PaddleClas中关于ResNet的具体代码详见 [PaddleClas Github 官方仓库](
 之后有[论文](https://arxiv.org/abs/2002.04745)改变LN层的位置并做了相关实验，发现LN层防止在多头自注意力模块之前整个网络训练成功率会较高一点。而这种做法也被称为 PreNorm。拿下 ICCV 2021 最佳论文奖的Swin Transformer，使用的也是PreNorm，具体代码可见[Swin Transformer Github官方仓库](
 https://github.com/microsoft/Swin-Transformer/blob/5d2aede42b4b12cb0e7a2448b58820aeda604426/models/swin_transformer.py#L233-L270)。
 
-![image-20220226205524640](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202262055529.png)
+<div align=center><img src="https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202262055529.png"></div>
+
 <center>图6: Transformer中的 (a)PostNorm (b)PreNorm</center><br></br>
 
 ### 3.3 Paddle中已实现的归一化方法
