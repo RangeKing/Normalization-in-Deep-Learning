@@ -36,8 +36,7 @@
 可将该损失函数寻求最优解过程可视化为下图：
 ![](https://paddlepedia.readthedocs.io/en/latest/_images/normalization.png)
 
-<center>图1: 损失函数的等高线，（左）为未归一化时，（右）为归一化</center><br>
-
+<div align=center>图1: 损失函数的等高线，（左）为未归一化时，（右）为归一化</div><br>
 
 在图1中，左图的红色椭圆代表归一化前的损失函数等高线，蓝色线段代表梯度的更新，箭头的方向代表梯度更新的方向。寻求最优解的过程就是梯度更新的过程，其更新方向与登高线垂直。由于<img src="https://latex.codecogs.com/svg.latex?x_1"> 和 <img src="https://latex.codecogs.com/svg.latex?x_2"> 的量级相差过大，损失函数的等高线呈现为一个瘦窄的椭圆。因此如图1（左）所示，瘦窄的椭圆形会使得梯度下降过程呈之字形呈现，导致梯度下降速度缓慢。
 
@@ -144,7 +143,7 @@ Batch Normalization (BN) 是最早出现的，也通常是效果最好的归一�
 
 ![image-20220220102250130](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201022870.png)
 
-<center>图2: CNN中BN示意图<br>注：图中蓝色表示一次BN处理的对象，···表示省略。之后的图3-5同理。</center><br>
+<div align=center>图2: CNN中BN示意图<br>注：图中蓝色表示一次BN处理的对象，···表示省略。之后的图3-5同理。</div><br>
 
 如果把 <img src="https://latex.codecogs.com/svg.latex?x\in\mathbb{R}^{N\times{C}\times{H}\times{W}"> 类比为一叠相册。假设当N=3、C=4、H=5、B=6时，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。BN 求均值时，相当于把这些相册按页码一一对应地加起来，再除以这些照片的像素总数：N×H×W。BN 求均值是一个“跨相册求平均”的操作（如图 2 所示），求标准差时也是同理。
 
@@ -214,13 +213,15 @@ Layer Normalization (LN) 的一个优势是不需要批训练，在单条数据�
 
 ![image-20220220102401871](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201024372.png)
 
-<center>图3: CNN中LN示意图</center><br></br>
+<div align=center>图3: CNN中LN示意图</div><br></br>
 
 继续采用之前的类比，把一个 batch 的 feature 类比为一叠相册。LN 求均值时，相当于把每一本相册的所有像素加起来，再除以这本相册的像素总数：C×H×W，即求单本相册（图3蓝色所示）的平均像素值，求标准差时也是同理。
 
 #### 2.3.3 LN代码实践
 
-`class paddle.nn.LayerNorm(normalized_shape, epsilon=1e-05, weight_attr=None, bias_attr=None, name=None)`
+```python
+class paddle.nn.LayerNorm(normalized_shape, epsilon=1e-05, weight_attr=None, bias_attr=None, name=None)
+```
 
 该接口用于构建 `LayerNorm` 类的一个可调用对象，具体参数详情参考[LayerNorm](https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/nn/LayerNorm_cn.html#cn-api-nn-layernorm)。
 
@@ -256,13 +257,15 @@ Layer Normalization (LN) 的一个优势是不需要批训练，在单条数据�
 
 ![image-20220220102433261](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201024539.png)
 
-<center>图4: CNN中IN示意图</center><br></br>
+<div align=center>图4: CNN中IN示意图</div><br></br>
 
 IN 求均值时，相当于把一张照片中所有像素值加起来，再除以该张照片总像素数：H×W，即求每张照片的平均像素值，求标准差时也是同理。
 
 #### 2.4.3 IN代码实践
 
-`class paddle.nn.InstanceNorm2D(num_features, epsilon=1e-05, momentum=0.9, weight_attr=None, bias_attr=None, data_format="NCHW", name=None)`
+```python
+class paddle.nn.InstanceNorm2D(num_features, epsilon=1e-05, momentum=0.9, weight_attr=None, bias_attr=None, data_format="NCHW", name=None)
+```
 
 该接口用于构建 `InstanceNorm2D` 类的一个可调用对象，具体参数详情参考[InstanceNorm2D](https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/nn/InstanceNorm2D_cn.html#instancenorm2d)。
 
@@ -297,13 +300,15 @@ IN 求均值时，相当于把一张照片中所有像素值加起来，再除�
 
 ![image-20220220102507902](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201025998.png)</div>
 
-<center>图5: CNN中GN的示意图</center><br></br>
+<div align=center>图5: CNN中GN的示意图</div><br></br>
 
 继续用相册类比，GN 相当于把一本 C 页的相册平均分成 G 份，每份成为有 C/G 页的小册子，求每个小册子的平均像素值和标准差。
 
 #### 2.5.3 GN代码实践
 
-`class paddle.nn.GroupNorm(num_groups, num_channels, epsilon=1e-05, weight_attr=None, bias_attr=None, data_layout='NCHW, 'name=None)`
+```python
+class paddle.nn.GroupNorm(num_groups, num_channels, epsilon=1e-05, weight_attr=None, bias_attr=None, data_layout='NCHW, 'name=None)
+```
 
 该接口用于构建 `GroupNorm` 类的一个可调用对象，具体参数详情参考[GroupNorm](https://www.paddlepaddle.org.cn/documentation/docs/zh/api/paddle/nn/GroupNorm_cn.html#groupnorm)。
 
@@ -395,7 +400,7 @@ https://github.com/microsoft/Swin-Transformer/blob/5d2aede42b4b12cb0e7a2448b5882
 
 <div align=center><img src="https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202262055529.png"></div>
 
-<center>图6: Transformer中的 (a)PostNorm (b)PreNorm</center><br></br>
+<div align=center>图6: Transformer中的 (a)PostNorm (b)PreNorm</div><br></br>
 
 ### 3.3 Paddle中已实现的归一化方法
 
