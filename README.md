@@ -75,17 +75,17 @@
 
    * 对数归一化：
 
-	<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'} = \frac{\lg x}{\lg max(x)}"></div>
+	<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'}=\frac{\lg{x}}{\lg{max(x)}}"></div>
 
    * 反正切函数归一化：
 
-	<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'} = \arctan(x) * \frac{2}{\pi}"></div>
+	<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'}=\arctan(x)*\frac{2}{\pi}"></div>
 
    归一化后的数据范围为 [-1, 1]
 
    * 小数定标标准化（Demical Point Normalization）:
 
-	<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'} = \frac{x}{10^j}"></div>
+	<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'}=\frac{x}{10^j}"></div>
 
    归一化后的数据范围为 [-1, 1]，<img src="https://latex.codecogs.com/svg.latex?j"> 为使<img src="https://latex.codecogs.com/svg.latex?max(|x^{'}|)\textless1"> 的最小整数。
 
@@ -105,9 +105,9 @@
 
 谈到归一化和标准化可能会存在一些概念的混淆，我们都知道归一化是指normalization，标准化是指standardization，但根据wiki上对feature scaling方法的定义，standardization其实就是z-score normalization，也就是说标准化其实是归一化的一种，而一般情况下，我们会把z-score归一化称为标准化，把min-max归一化简称为归一化。在下文中，我们也是用标准化指代z-score归一化，并使用归一化指代min-max归一化。
 
-其实，归一化和标准化在本质上都是一种线性变换。在`1.4 归一化有哪些类型`中，我们提到了归一化和标准化的公式，对于归一化的公式，在数据给定的情况下，可以令<img src="https://latex.codecogs.com/svg.latex?a = max(x) - min(x),b = min(x)">，则归一化的公式可变形为：
+其实，归一化和标准化在本质上都是一种线性变换。在`1.4 归一化有哪些类型`中，我们提到了归一化和标准化的公式，对于归一化的公式，在数据给定的情况下，可以令<img src="https://latex.codecogs.com/svg.latex?a=max(x)-min(x),b=min(x)">，则归一化的公式可变形为：
 
-<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'} = \frac{x - b}{a} = \frac{x}{a} - \frac{b}{a} = \frac{x}{a} - c"></div>
+<div align="center"><img src="https://latex.codecogs.com/svg.latex?x^{'}=\frac{x-b}{a}=\frac{x}{a}-\frac{b}{a}=\frac{x}{a}-c"></div>
 
 标准化的公式与变形后的归一化类似，其中的<img src="https://latex.codecogs.com/svg.latex?\mu">和<img src="https://latex.codecogs.com/svg.latex?\sigma">在数据给定的情况下，可以看作常数。因此，标准化的变形与归一化的类似，都可看作对<img src="https://latex.codecogs.com/svg.latex?x">按比例<img src="https://latex.codecogs.com/svg.latex?a">进行缩放，再进行<img src="https://latex.codecogs.com/svg.latex?c">个单位的平移。由此可见，归一化和标准化的本质都是一种线性变换，他们都不会因为对数据的处理而改变数据的原始数值排序。
 
@@ -139,14 +139,14 @@
 
 Batch Normalization (BN) 是最早出现的，也通常是效果最好的归一化方式。特征图feature map：<img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> ,包含 N 个样本，每个样本通道数为 C，高为 H，宽为 W。对其求均值和方差时，将在 N、H、W上操作，而保留通道 C 的维度。具体来说，就是把第1个样本的第1个通道，加上第2个样本第1个通道 ...... 加上第 N 个样本第1个通道，求平均，得到通道 1 的均值（注意是除以 N×H×W 而不是单纯除以 N，最后得到的是一个代表这个 batch 第1个通道平均值的数字，而不是一个 H×W 的矩阵)。求通道 1 的方差也是同理。对所有通道都施加一遍这个操作，就得到了所有通道的均值和方差。
 
-<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{c}(x)=\frac{1}{N H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{c}(x)=\sqrt{\frac{1}{C H W} \sum_{n=1}^{N} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{c}(x)\right)^{2}+\epsilon}"></div>
+<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{c}(x)=\frac{1}{NH W}\sum_{n=1}^{N}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{c}(x)=\sqrt{\frac{1}{CHW} \sum_{n=1}^{N}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{c}(x)\right)^{2}+\epsilon}"></div>
+
 
 ![image-20220220102250130](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201022870.png)
 
 <center>图2: CNN中BN示意图<br>注：图中蓝色表示一次BN处理的对象，···表示省略。之后的图3-5同理。</center><br>
 
-如果把 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> 类比为一叠相册。假设当N=3、C=4、H=5、B=6时，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。BN 求均值时，相当于把这些相册按页码一一对应地加起来，再除以这些照片的像素总数：N×H×W。BN 求均值是一个“跨相册求平均”的操作（如图 2 所示），求标准差时也是同理。
+如果把 <img src="https://latex.codecogs.com/svg.latex?x\in\mathbb{R}^{N\times{C}\times{H}\times{W}"> 类比为一叠相册。假设当N=3、C=4、H=5、B=6时，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。BN 求均值时，相当于把这些相册按页码一一对应地加起来，再除以这些照片的像素总数：N×H×W。BN 求均值是一个“跨相册求平均”的操作（如图 2 所示），求标准差时也是同理。
 
 
 #### 2.2.3 原理解析
@@ -208,8 +208,7 @@ Batch Normalization 的一个缺点是**需要较大的 batchsize 才能合理�
 Layer Normalization (LN) 的一个优势是不需要批训练，在单条数据内部就能归一化。
 对于 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> , LN 对每个样本的 C、H、W 维度上的数据求均值和标准差，保留 N 维度。
 
-<img src="https://latex.codecogs.com/svg.latex?u_{n}(x)=\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{n}(x)=\sqrt{\frac{1}{C H W} \sum_{c=1}^{C} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n}(x)\right)^{2}+\epsilon}"></div>
+<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{n}(x)=\frac{1}{CHW}\sum_{c=1}^{C}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{n}(x)=\sqrt{\frac{1}{CHW}\sum_{c=1}^{C}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{n}(x)\right)^{2}+\epsilon}"></div>
 
 ![image-20220220102401871](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201024372.png)
 
@@ -249,10 +248,9 @@ Layer Normalization (LN) 的一个优势是不需要批训练，在单条数据�
 对于图像风格迁移这类的注重每个像素的细粒度任务来说，每个样本的每个像素点的信息都是非常重要的，于是像BN这种每个批量的所有样本都做归一化的算法就不太适用了，因为BN计算归一化统计量时考虑了一个批量中所有图片的内容，从而造成了每个样本独特细节的丢失。同理对于LN这类需要考虑一个样本所有通道的算法来说可能忽略了不同通道的差异，也不太适用于图像风格迁移这类应用。
 
 #### 2.4.2 概念及公式
-对于 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}"> ，IN 对每个样本的 H、W 维度的数据求均值和标准差，保留 N 、C 维度，也就是说，它只在 channel 内部求均值和标准差，其公式为：
+对于 <img src="https://latex.codecogs.com/svg.latex?x\in\mathbb{R}^{N\times{C}\times{H}\times{W}}"> ，IN 对每个样本的 H、W 维度的数据求均值和标准差，保留 N 、C 维度，也就是说，它只在 channel 内部求均值和标准差，其公式为：
 
-<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{n c}(x)=\frac{1}{H W} \sum_{h=1}^{H} \sum_{w=1}^{W} x_{n c h w} \\
-\sigma_{n c}(x)=\sqrt{\frac{1}{H W} \sum_{h=1}^{H} \sum_{w=1}^{W}\left(x_{n c h w}-\mu_{n c}(x)\right)^{2}+\epsilon}"></div>
+<div align="center"><img src="https://latex.codecogs.com/svg.latex?u_{nc}(x)=\frac{1}{HW}\sum_{h=1}^{H}\sum_{w=1}^{W}x_{nchw}\\\sigma_{nc}(x)=\sqrt{\frac{1}{HW}\sum_{h=1}^{H}\sum_{w=1}^{W}\left(x_{nchw}-\mu_{nc}(x)\right)^{2}+\epsilon}"></div>
 
 ![image-20220220102433261](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202201024539.png)
 
@@ -336,7 +334,7 @@ IN 求均值时，相当于把一张照片中所有像素值加起来，再除�
 ### 3.1 对比
 
 
-如果把 <img src="https://latex.codecogs.com/svg.latex?x \in \mathbb{R}^{N \times C \times H \times W}">类比为一叠相册，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。
+如果把 <img src="https://latex.codecogs.com/svg.latex?x\in\mathbb{R}^{N\times{C}\times{H}\times{W}}">类比为一叠相册，这叠相册总共有 N 本，每本有 C 页，每页照片的尺寸[长×宽]为[H×W]。
 
 
 | 方法         | 类比                                                         | 应用场景                                    |
@@ -390,7 +388,7 @@ PaddleClas中关于ResNet的具体代码详见 [PaddleClas Github 官方仓库](
 #### 3.2.2 LN层位置
 最近大火的Transformer中就用到LN。谷歌[ViT](https://arxiv.org/abs/2010.11929)的论文中LN层是放置在多头自注意力模块和残差连接相加之后（如图6(a)所示），这种做法被称为 PostNorm。
 
-之后有[论文](https://arxiv.org/abs/2002.04745)改变LN层的位置并做了相关实验，发现LN层防止在多头自注意力模块之前整个网络训练成功率会较高一点。而这种做法也被称为 PreNorm。拿下 ICCV 2021 的最佳论文奖的Swin Transformer，使用的也是PreNorm，具体代码可见[Swin Transformer Github官方仓库](
+之后有[论文](https://arxiv.org/abs/2002.04745)改变LN层的位置并做了相关实验，发现LN层防止在多头自注意力模块之前整个网络训练成功率会较高一点。而这种做法也被称为 PreNorm。拿下 ICCV 2021 最佳论文奖的Swin Transformer，使用的也是PreNorm，具体代码可见[Swin Transformer Github官方仓库](
 https://github.com/microsoft/Swin-Transformer/blob/5d2aede42b4b12cb0e7a2448b58820aeda604426/models/swin_transformer.py#L233-L270)。
 
 ![image-20220226205524640](https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202262055529.png)
