@@ -392,14 +392,16 @@ PaddleClas中关于ResNet的具体代码详见 [PaddleClas Github 官方仓库](
 
 
 #### 3.2.2 LN层位置
-最近大火的Transformer中就用到LN。谷歌[ViT](https://arxiv.org/abs/2010.11929)的论文中LN层是放置在多头自注意力模块和残差连接相加之后（如图6(a)所示），这种做法被称为 PostNorm。
+最近大火的Transformer中就用到LN。谷歌最初用于NLP的[Transformer](https://arxiv.org/abs/1706.03762)的论文中LN层是放置在多头自注意力模块和残差连接相加之后（如图6(a)所示），这种做法被称为Post-LN。
 
-之后有[论文](https://arxiv.org/abs/2002.04745)改变LN层的位置并做了相关实验，发现LN层防止在多头自注意力模块之前整个网络训练成功率会较高一点。而这种做法也被称为 PreNorm。拿下 ICCV 2021 最佳论文奖的Swin Transformer，使用的也是PreNorm，具体代码可见[Swin Transformer Github官方仓库](
-https://github.com/microsoft/Swin-Transformer/blob/5d2aede42b4b12cb0e7a2448b58820aeda604426/models/swin_transformer.py#L233-L270)。
+之后有[论文](https://arxiv.org/abs/2002.04745)改变LN层的位置并做了相关实验，发现LN层放置在多头自注意力模块之前整个网络训练比较稳定，这种做法也被称为Pre-LN。计算机视觉的[ViT](https://arxiv.org/abs/2010.11929)，以及拿下ICCV 2021最佳论文奖的[Swin Transformer](https://arxiv.org/abs/2103.14030)，使用的也Pre-LN，具体代码可见[Swin Transformer Github官方仓库](
+https://github.com/microsoft/Swin-Transformer/blob/5d2aede42b4b12cb0e7a2448b58820aeda604426/models/swin_transformer.py#L233-L270)。而Post-LN训练成功的结果往往比Pre-LN的精度要高一些。
 
 <div align=center><img src="https://raw.githubusercontent.com/RangeKing/Cloud-Image/main/img/202202262055529.png"></div>
 
-<div align=center>图6: Transformer中的 (a)PostNorm (b)PreNorm</div><br></br>
+<div align=center>图6: Transformer中的 (a)Post-LN (b)Pre-LN</div><br></br>
+
+2022年3月1日微软的新论文 [DeepNet: Scaling Transformers to 1,000 Layers](https://arxiv.org/abs/2203.00555) 中提出了一种新的归一化方法 DeepNorm，提升了 Transformer 模型的稳定性，并成功将模型深度扩展到了1000多层。他们的实验结果表明，DEEPNorm 能够将 Post-LN 的良好性能和Pre-LN的稳定训练高效结合起来。
 
 ### 3.3 Paddle中已实现的归一化方法
 
